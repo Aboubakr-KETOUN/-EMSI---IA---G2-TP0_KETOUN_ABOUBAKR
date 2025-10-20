@@ -112,28 +112,40 @@ public class Bb implements Serializable {
      *
      * @return null pour rester sur la même page.
      */
+
     public String envoyer() {
         if (question == null || question.isBlank()) {
-            // Erreur ! Le formulaire va être réaffiché en réponse à la requête POST, avec un message d'erreur.
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Texte question vide", "Il manque le texte de la question");
             facesContext.addMessage(null, message);
             return null;
         }
-        // Entourer la réponse avec "||".
-        this.reponse = "||";
-        // Si la conversation n'a pas encore commencé, ajouter le rôle système au début de la réponse
+
+        //entourage de la reponse avec mon numero dans la liste 19
+        this.reponse = "19-";
+
         if (this.conversation.isEmpty()) {
-            // Ajouter le rôle système au début de la réponse
             this.reponse += roleSysteme.toUpperCase(Locale.FRENCH) + "\n";
-            // Invalide le bouton pour changer le rôle système
             this.roleSystemeChangeable = false;
         }
-        this.reponse += question.toLowerCase(Locale.FRENCH) + "||";
-        // La conversation contient l'historique des questions-réponses depuis le début.
+
+        //changement de traitement pour chercher les premiers lettres de mon nom complete "ak"(aboubakr ketoun)
+        String lower = question.toLowerCase(Locale.FRENCH);
+        String[] words = lower.split("\\s+");
+        long count = 0;
+        for (String word : words) {
+            if (word.equals("ak")) {
+                count++;
+            }
+        }
+
+        //sufix 19 et resultat du counter
+        this.reponse += "Le mot 'ak' apparaît " + count + " fois dans ta question. -19";
+
         afficherConversation();
         return null;
     }
+
 
     /**
      * Pour un nouveau chat.
